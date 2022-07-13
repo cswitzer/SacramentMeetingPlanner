@@ -12,7 +12,7 @@ import MenuIcon from "@mui/icons-material/Menu"
 const Navbar = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position='static'>
+      <AppBar position='static' sx={{ background: "black" }}>
         {/* Toolbar sets flex positioning to row */}
         <Toolbar>
           <IconButton
@@ -30,18 +30,29 @@ const Navbar = () => {
           <Link
             component={RouterLink}
             to='/'
-            color='text.primary'
+            color='#fafafa'
+            underline='hover'
             sx={{ my: 1, mx: 1.5 }}
           >
             Home
           </Link>
           <Link
             component={RouterLink}
-            to='/sacrament-plan'
-            color='text.primary'
+            to='/add-plan'
+            color='#fafafa'
+            underline='hover'
             sx={{ my: 1, mx: 1.5 }}
           >
-            Plan A Meeting
+            Add Meeting
+          </Link>
+          <Link
+            component={RouterLink}
+            to='/add-member'
+            color='#fafafa'
+            underline='hover'
+            sx={{ my: 1, mx: 1.5 }}
+          >
+            Add Member
           </Link>
         </Toolbar>
       </AppBar>
