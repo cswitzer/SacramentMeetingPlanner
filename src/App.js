@@ -4,6 +4,7 @@ import Button from "@mui/material/Button"
 
 import Home from "./pages/Home"
 import AddSacramentPlanForm from "./pages/AddSacramentPlanForm"
+import AddMemberForm from "./pages/AddMemberForm"
 import Navbar from "./components/Navbar"
 import "./App.css"
 
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/add-plan' element={<AddSacramentPlanForm />} />
+          <Route path='/add-member' element={<AddMemberForm />} />
         </Routes>
       </Router>
     </>
