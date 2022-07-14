@@ -76,6 +76,7 @@ const AddSacramentPlanForm = () => {
           <Stack spacing={2} marginTop={2} width='400px'>
             <Autocomplete
               options={members.map((member) => member.FullName)}
+              getOptionLabel={(member) => member.FullName}
               fullWidth
               renderInput={(params) => (
                 <TextField {...params} label='Conducting Leader' />
