@@ -27,10 +27,16 @@ const AddMemberForm = () => {
   const onSubmit = async (e) => {
     e.preventDefault()
     // this will post the member to be created
-    const members = await api.get("api/Members")
-    // TODO: toast showing success or failure
-    // TODO: if successful, use useNavigate to show list of all members
-    console.log(members)
+    const member = { FullName: name }
+
+    try {
+      const response = await api.post("api/Members", member)
+      if (response.status === 201) {
+        console.log("Successful")
+      }
+    } catch (e) {
+      console.log("Error processing request")
+    }
   }
 
   const onChange = (e) => {
