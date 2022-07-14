@@ -19,40 +19,22 @@ const api = axios.create({
 const AddSacramentPlanForm = () => {
   const theme = createTheme()
 
-  const [members, setMembers] = useState([
-    {
-      MemberId: "1",
-      FullName: "John Smith",
-    },
-  ])
-  const [hymns, setHymns] = useState([
-    {
-      HymnNumber: "1",
-      HymnTitle: "Good song",
-    },
-  ])
-
-  const getMembers = async () => {
-    const request = await api.get("api/Hymns")
-    console.log(request.data)
-    return request.data
-  }
-
-  const getHymns = async () => {
-    const request = await api.get("api/Members")
-    console.log(request.data)
-    return request.data
-  }
+  const [members, setMembers] = useState([])
+  const [hymns, setHymns] = useState([])
 
   useEffect(() => {
-    const fetchData = async () => {
-      const allMembers = await getMembers()
-      const allHymns = await getHymns()
-      setMembers(allMembers)
-      setHymns(allHymns)
+    const fetchMembers = async () => {
+      let { data } = await api.get("api/Members")
+      setMembers(data)
     }
 
-    fetchData()
+    const fetchHymns = async () => {
+      let { data } = await api.get("api/Hymns")
+      setHymns(data)
+    }
+
+    fetchMembers()
+    fetchHymns()
   }, [])
 
   return (
@@ -75,57 +57,22 @@ const AddSacramentPlanForm = () => {
           </Typography>
           <Stack spacing={2} marginTop={2} width='400px'>
             <Autocomplete
-              options={members.map((member) => member.FullName)}
-              getOptionLabel={(member) => member.FullName}
+              id='conducting_leader'
+              options={members}
+              getOptionLabel={(members) => `${members.fullName}`}
               fullWidth
               renderInput={(params) => (
                 <TextField {...params} label='Conducting Leader' />
               )}
             />
             <Autocomplete
-              options={members.map((member) => member.FullName)}
-              fullWidth
-              renderInput={(params) => (
-                <TextField {...params} label='Opening Prayer' />
-              )}
-            />
-            <Autocomplete
-              options={members.map((member) => member.FullName)}
-              fullWidth
-              renderInput={(params) => (
-                <TextField {...params} label='Sacrament Prayer' />
-              )}
-            />
-            <Autocomplete
-              options={members.map((member) => member.FullName)}
-              fullWidth
-              renderInput={(params) => (
-                <TextField {...params} label='Closing Prayer' />
-              )}
-            />
-            <Autocomplete
-              options={hymns.map((hymn) => hymn.HymnTitle)}
+              id='opening_hymn'
+              options={hymns}
+              getOptionLabel={(hymns) => `${hymns.hymnTitle}`}
+              key={(hymns) => `${hymns.hymnNumber}`}
               fullWidth
               renderInput={(params) => (
                 <TextField {...params} label='Opening Hymn' />
-              )}
-            />
-            <Autocomplete
-              options={hymns.map((hymn) => hymn.HymnTitle)}
-              renderInput={(params) => (
-                <TextField {...params} label='Sacrament Hymn' />
-              )}
-            />
-            <Autocomplete
-              options={hymns.map((hymn) => hymn.HymnTitle)}
-              renderInput={(params) => (
-                <TextField {...params} label='Intermediate Hymn' />
-              )}
-            />
-            <Autocomplete
-              options={hymns.map((hymn) => hymn.HymnTitle)}
-              renderInput={(params) => (
-                <TextField {...params} label='Closing Hymn' />
               )}
             />
           </Stack>
