@@ -21,31 +21,38 @@ const AddSacramentPlanForm = () => {
 
   const [members, setMembers] = useState([
     {
-      MemberId: "",
-      FullName: "",
+      MemberId: "1",
+      FullName: "John Smith",
     },
   ])
   const [hymns, setHymns] = useState([
     {
-      HymnNumber: "",
-      HymnTitle: "",
+      HymnNumber: "1",
+      HymnTitle: "Good song",
     },
   ])
 
   const getMembers = async () => {
     const request = await api.get("api/Hymns")
-    setMembers(request.data)
-    console.log(members)
+    console.log(request.data)
+    return request.data
   }
 
   const getHymns = async () => {
     const request = await api.get("api/Members")
-    setHymns(request.data)
+    console.log(request.data)
+    return request.data
   }
 
   useEffect(() => {
-    getMembers()
-    getHymns()
+    const fetchData = async () => {
+      const allMembers = await getMembers()
+      const allHymns = await getHymns()
+      setMembers(allMembers)
+      setHymns(allHymns)
+    }
+
+    fetchData()
   }, [])
 
   return (
@@ -69,7 +76,6 @@ const AddSacramentPlanForm = () => {
           <Stack spacing={2} marginTop={2} width='400px'>
             <Autocomplete
               options={members.map((member) => member.FullName)}
-              getOptionLabel={(member) => member.FullName}
               fullWidth
               renderInput={(params) => (
                 <TextField {...params} label='Conducting Leader' />
@@ -77,7 +83,6 @@ const AddSacramentPlanForm = () => {
             />
             <Autocomplete
               options={members.map((member) => member.FullName)}
-              getOptionLabel={(member) => member.FullName}
               fullWidth
               renderInput={(params) => (
                 <TextField {...params} label='Opening Prayer' />
@@ -85,7 +90,6 @@ const AddSacramentPlanForm = () => {
             />
             <Autocomplete
               options={members.map((member) => member.FullName)}
-              getOptionLabel={(member) => member.FullName}
               fullWidth
               renderInput={(params) => (
                 <TextField {...params} label='Sacrament Prayer' />
@@ -93,7 +97,6 @@ const AddSacramentPlanForm = () => {
             />
             <Autocomplete
               options={members.map((member) => member.FullName)}
-              getOptionLabel={(member) => member.FullName}
               fullWidth
               renderInput={(params) => (
                 <TextField {...params} label='Closing Prayer' />
@@ -101,7 +104,6 @@ const AddSacramentPlanForm = () => {
             />
             <Autocomplete
               options={hymns.map((hymn) => hymn.HymnTitle)}
-              getOptionLabel={(hymn) => hymn.HymnTitle}
               fullWidth
               renderInput={(params) => (
                 <TextField {...params} label='Opening Hymn' />
@@ -109,21 +111,18 @@ const AddSacramentPlanForm = () => {
             />
             <Autocomplete
               options={hymns.map((hymn) => hymn.HymnTitle)}
-              getOptionLabel={(hymn) => hymn.HymnTitle}
               renderInput={(params) => (
                 <TextField {...params} label='Sacrament Hymn' />
               )}
             />
             <Autocomplete
               options={hymns.map((hymn) => hymn.HymnTitle)}
-              getOptionLabel={(hymn) => hymn.HymnTitle}
               renderInput={(params) => (
                 <TextField {...params} label='Intermediate Hymn' />
               )}
             />
             <Autocomplete
               options={hymns.map((hymn) => hymn.HymnTitle)}
-              getOptionLabel={(hymn) => hymn.HymnTitle}
               renderInput={(params) => (
                 <TextField {...params} label='Closing Hymn' />
               )}
