@@ -30,7 +30,7 @@ const AddSacramentPlanForm = () => {
     SacramentHymnId: 0,
     IntermediateHymnId: 0,
     ClosingHymnId: 0,
-    Speakers: [{}],
+    Speakers: [],
   })
   const [members, setMembers] = useState([])
   const [hymns, setHymns] = useState([])
@@ -38,7 +38,6 @@ const AddSacramentPlanForm = () => {
   const [numSpeakerFields, setNumberSpeakerFields] = useState([])
 
   const onChange = (e, id) => {
-    // mui adds a weird option string behind my id names...
     const fieldToUpdate = e.target.id.substring(0, e.target.id.indexOf("-"))
     setForm({
       ...form,
@@ -46,14 +45,56 @@ const AddSacramentPlanForm = () => {
     })
   }
 
-  const handleFieldAdd = () => {
-    setNumberSpeakerFields([...numSpeakerFields, { field: "" }])
+  const onChangeSpeaker = (e, id) => {
+    // update speaker field here in form
   }
 
+  const handleFieldAdd = () => {
+    setNumberSpeakerFields([...numSpeakerFields, { field: "" }])
+    // add extra speaker object into speakers (DELETE SPEAKERID WHEN SUBMITTING TO DATABASE)
+    setForm((prevState) => ({
+      ...form,
+      Speakers: [
+        ...prevState.Speakers,
+        {
+          Topic: "Random",
+          MemberId: 0,
+          SpeakerId: numSpeakerFields.length,
+        },
+      ],
+    }))
+  }
+
+  // the speaker id here is not related to the model's speaker id and will be deleted before submitting to the database
+  // it is here simply so the application knows which indexed object to remove from the state object Speakers array
   const handleFieldRemove = (index) => {
     const list = [...numSpeakerFields]
     list.splice(index, 1)
     setNumberSpeakerFields(list)
+
+    // filter out from state array the field that was deleted
+    setForm((prevState) => ({
+      ...form,
+      Speakers: prevState.Speakers.filter(
+        (speaker) => speaker.SpeakerId !== index
+      ),
+    }))
+
+    setForm((prevState) => ({
+      ...form,
+      Speakers: prevState.Speakers.map((speaker, index) => {
+        let updatedSpeaker = { ...speaker }
+        updatedSpeaker.SpeakerId = index
+        return updatedSpeaker
+      }),
+    }))
+  }
+
+  const onUpdateMemberTextField = (e) => {}
+
+  // for submitting the entire form
+  const onSubmit = async (e) => {
+    e.preventDefault()
   }
 
   useEffect(() => {
@@ -89,12 +130,14 @@ const AddSacramentPlanForm = () => {
           <Typography component='h1' variant='h5'>
             Plan a Meeting
           </Typography>
+          {/* This is the form for prayers and hymns */}
           <Stack
             spacing={2}
             marginTop={2}
             marginBottom={5}
             width='400px'
             component='form'
+            onSubmit={onSubmit}
           >
             <Autocomplete
               id='ConductingLeaderId'
@@ -205,7 +248,12 @@ const AddSacramentPlanForm = () => {
                   fullWidth
                   sx={{ p: 2, border: "1px solid black", borderRadius: "5px" }}
                 >
-                  <TextField fullWidth label='Topic' sx={{ mb: 2 }} />
+                  <TextField
+                    fullWidth
+                    label='Topic'
+                    sx={{ mb: 2 }}
+                    onChange={onUpdateMemberTextField}
+                  />
                   <Autocomplete
                     id='ConductingLeaderId'
                     options={members}
@@ -230,6 +278,9 @@ const AddSacramentPlanForm = () => {
                 </Box>
               )
             })}
+            <Button type='submit' variant='contained'>
+              Add Meeting
+            </Button>
           </Stack>
         </Box>
       </Container>
